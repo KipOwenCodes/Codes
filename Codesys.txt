@@ -1,0 +1,32 @@
+PROGRAM PLC_PRG
+VAR
+	money		:DINT := 2100000;
+	volume_max	:REAL := 235000;
+	ipp_cost	:INT  := 5400;
+	ipp_vol		:REAL := 700;
+	ktr_cost	:INT  := 12240;
+	ktr_vol		:REAL := 1350;
+	ipp_all		:INT  := 335;
+	ktr_all		:INT  := 174;
+	volume_sum  	:REAL := 0;
+	ipp		:INT;
+	ktr		:INT;
+	ipp_max		:INT;
+	ktr_max		:INT;
+END_VAR
+
+----------------------------------------
+
+FOR ipp := 0 TO ipp_all DO
+	FOR ktr := 0 TO ktr_all DO
+		IF ipp * ipp_cost + ktr * ktr_cost <= money AND ipp * ipp_vol + ktr * ktr_vol <= volume_max AND ipp * ipp_vol + ktr * ktr_vol > volume_sum THEN
+			ipp_max := ipp;
+			ktr_max := ktr;
+			volume_sum := ipp * ipp_vol + ktr * ktr_vol;
+		END_IF
+	END_FOR
+END_FOR
+
+----------------------------------------
+
+Ответ: Коробок ИПП120:  58 , Коробок КТР-121:  144
