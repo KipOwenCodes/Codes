@@ -1,28 +1,41 @@
 PROGRAM PLC_PRG
 VAR
+	//наш бюджет 
 	money		:DINT := 2100000;
+	// объем шкафа
 	volume_max	:REAL := 235000;
+	// цена и объём ИПП120
 	ipp_cost	:INT  := 5400;
 	ipp_vol		:REAL := 700;
+	// цена и объём КТР-121
 	ktr_cost	:INT  := 12240;
 	ktr_vol		:REAL := 1350;
+	// задаём максимальное количество упаковок каждого товара
 	ipp_all		:INT  := 335;
 	ktr_all		:INT  := 174;
+	// сюда мы положим результаты поиска
 	volume_sum  	:REAL := 0;
-	ipp		:INT;
-	ktr		:INT;
 	ipp_max		:INT;
 	ktr_max		:INT;
+	ipp_count	:INT;
+	ktr_count	:INT;
 END_VAR
-
 ----------------------------------------
 
-FOR ipp := 0 TO ipp_all DO
-	FOR ktr := 0 TO ktr_all DO
-		IF ipp * ipp_cost + ktr * ktr_cost <= money AND ipp * ipp_vol + ktr * ktr_vol <= volume_max AND ipp * ipp_vol + ktr * ktr_vol > volume_sum THEN
-			ipp_max := ipp;
-			ktr_max := ktr;
-			volume_sum := ipp * ipp_vol + ktr * ktr_vol;
+// перебираем все варианты с ИПП120…
+FOR ipp_count := 0 TO ipp_all DO
+	// … и КТР-121
+	FOR ktr_count := 0 TO ktr_all DO
+		// берём получившееся количество коробок и проверяем цену и объём 
+		// если помещается в шкаф и бюджет и у этого набора максимальный объем на этом этапе — запоминаем значения 
+		IF ipp_count * ipp_cost + ktr_count * ktr_cost <= money 
+		AND ipp_count * ipp_vol + ktr_count * ktr_vol <= volume_max 
+		AND ipp_count * ipp_vol + ktr_count * ktr_vol > volume_sum THEN
+			// записываем значения в нужные переменные		
+			ipp_max := ipp_count;
+			ktr_max := ktr_count;
+			// считаем общий объем всех товаров
+			volume_sum := ipp_count * ipp_vol + ktr_count * ktr_vol;
 		END_IF
 	END_FOR
 END_FOR
